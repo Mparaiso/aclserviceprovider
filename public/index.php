@@ -18,4 +18,11 @@ post("/signup",function($app){
 get("/start",function($app){
 	return "Start";
 });
+
+get("/say/:message",function($app){
+	$app->set('message',$app->request('message'));
+	$app->render("home");
+});
+
+var_dump(Bones::get_instance());
 ?>
