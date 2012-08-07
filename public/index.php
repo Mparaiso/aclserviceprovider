@@ -24,5 +24,7 @@ get("/say/:message",function($app){
 	$app->render("home");
 });
 
-var_dump(Bones::get_instance());
+get("/hello",function($app){
+    return "hello Bones";
+});
 ?>
