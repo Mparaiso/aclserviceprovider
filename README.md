@@ -7,9 +7,9 @@
 ```php
 <?php
 
-require "..\lib\Bones.php";
+require "../lib/Bones.php";
 
-get("\",function($app){
+get("/",function($app){
 return "Hello Bones";
 });
 
