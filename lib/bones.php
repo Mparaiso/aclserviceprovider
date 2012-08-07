@@ -96,13 +96,13 @@ class Bones{
 
 			if(count($bones->route_segnments)==count($url_parts)):
 				foreach($url_parts as $key=>$part):
-					if(strpos($part, ":"))!==false):
+					if(strpos($part, ":")!==false):
 						//contains a route variable
 						$bones->route_variables[substr($part,1)]=$bones->route_segments[key];
 					else:
 						//doesnt contains a route variable
 						if($part==$bones->route_segments[$key])
-							if(!matched)
+							if(!matched):
 								matched=true;
 							endif;
 						else:
