@@ -101,9 +101,9 @@ class Bones{
 						$bones->route_variables[substr($part,1)]=$bones->route_segments[key];
 					else:
 						//doesnt contains a route variable
-						if($part==$bones->route_segments[$key])
+						if($part==$bones->route_segments[$key]):
 							if(!matched):
-								matched=true;
+								$matched=true;
 							endif;
 						else:
 							//routes dont match
