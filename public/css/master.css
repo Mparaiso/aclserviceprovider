@@ -1,0 +1,15 @@
+/*
+    Document   : master.css
+    Created on : 7 août 2012, 16:34:09
+    Author     : mark prades
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+    display: block;
+}
+
+body{
+    background: #E4E4E4;
+}
