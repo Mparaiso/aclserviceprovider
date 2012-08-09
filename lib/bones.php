@@ -1,9 +1,25 @@
 <?php
+/**
+ * One needs to define connection settings in a connection.php file :
+ *
+ * define("USER","user");
+ * define("PASSWORD","pass");
+ * define("COUCHDB_SERVER","server");
+ * define("DATABASE","database");
+ *
+ */
 
 ini_set("display_errors", "On");
-error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ERROR|E_PARSE|E_WARNING|E_USER_ERROR|E_STRICT);
 
 define('ROOT', __DIR__ . '/..');
+require_once ROOT.'/lib/sag/src/Sag.php';
+require_once ROOT.'/lib/connection.php';
+require_once ROOT.'/lib/bootstrap.php';
+
+function __autoload($classname){
+    include_once(ROOT."/classes/".strtolower($classname).".php");
+}
 
 function get($route, $callback) {
     Bones::register($route, $callback, "GET");
@@ -28,9 +44,26 @@ class Bones {
     public static $route_found = false;
     public $route = "";
     public $method = "";
+    /**
+     *
+     * @var array
+     */
     public $vars = array();
+    /**
+     *
+     * @var array
+     */
     public $route_segments = array();
+    /**
+     *
+     * @var array
+     */
     public $route_variables = array();
+    /**
+     *
+     * @var Sag
+     */
+    public $couch;
 
     /** singleton * */
     public static function get_instance() {
@@ -41,10 +74,13 @@ class Bones {
     }
 
     /** créer un nouveau Bone object* */
-    protected function __construct() {
+    function __construct() {
         $this->route = $this->get_route();
         $this->route_segments = explode('/', trim($this->route, '/'));
         $this->method = $this->get_method();
+        $this->couch= new Sag(COUCHDB_SERVER);
+        $this->couch->login(USER, PASSWORD);
+        $this->couch->setDatabase(DATABASE,true);
     }
 
     protected function get_route() {
@@ -76,7 +112,10 @@ class Bones {
         if ($layout == null) {
             require($this->content);
         } else {
+            ob_start();
             require(ROOT . '/views/' . $layout . '.php');
+            $result = ob_get_flush();
+            return $result;
         }
     }
 
@@ -97,7 +136,14 @@ class Bones {
         return $this->route_variables[$key];
     }
 
-    /** enregistre une route , un callback et une méthode http dans bones * */
+    function redirect($path="/"){
+      header('Location: '.$this->make_route($path));
+    }
+
+    /**
+     * enregistre une route ,
+     * un callback et une méthode http dans bones
+     */
     public static function register($route, $callback, $method) {
         if (!self::$route_found):
             $bones = self::get_instance();
@@ -134,6 +180,14 @@ class Bones {
                 echo $callback($bones);
             endif;
         endif;
+    }
+
+    /** helpers **/
+    /** affiche un message flash **/
+    function display_alert($variable){
+      if(isset($this->vars[$variable])){
+        return "<div class='alert alert-$variable'><a class='close' data-dismiss='alert'>x</a>".$this->vars[$variable]."</div>";
+      }
     }
 
 }

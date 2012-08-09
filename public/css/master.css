@@ -6,10 +6,9 @@
         Purpose of the stylesheet follows.
 */
 
-root {
-    display: block;
+.page-header{
+    margin-top:50px;
 }
-
-body{
-    background: #E4E4E4;
+input{
+    height:20px;
 }
