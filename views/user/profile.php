@@ -21,6 +21,13 @@
     </div>
 
     <div class="span8">
+      <? if ($is_current_user): ?>
+        <h2>Create a new post</h2>
+        <form action="<?= $this->make_route('/post') ?>" method="post">
+          <textarea name="content" id="content" rows="3" class="span8"></textarea>
+          <button id="create_post" type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      <? endif; ?>
       <h2>Posts</h2>
     </div>
   </div>

@@ -39,8 +39,8 @@ get("/hello", function($app) {
           return "hello Bones";
         });
 
-/** USERS * */
-/** login * */
+#USERS
+# login
 get('/login', function(Bones $app) {
           $app->render('user/login');
         });
@@ -60,13 +60,25 @@ get('/logout', function(Bones $app) {
           User::logout();
           $app->redirect('/');
         });
-/** PROFILE * */
+#PROFILE
 get("/user/:username", function(Bones $app) {
           $app->set('user', User::get_by_username($app->request("username")));
           $app->set('is_current_user', ($app->request("username") == User::current_user() ? true : false));
           $app->render('user/profile');
         });
+post('/post', function(Bones $app) {
+  if(User::is_authenticated()):
+          $post = new Post();
+          $post->content = $app->form('content');
+          if ($post->create()):
+            $app->set("success", "New post created");
+          endif;
+          $app->redirect("/user/" . User::current_user());
+          else:
+            $app->set('error',"You must be logged in to do that.");
+            $app->render('user/login');
+          endif;
+        });
 
-
-/** routes not found * */
+#Routes not found
 resolve();
