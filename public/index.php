@@ -39,6 +39,8 @@ get("/hello", function($app) {
           return "hello Bones";
         });
 
+/** USERS **/
+
 /** login **/
         get('/login',function(Bones $app){
           $app->render('user/login');
@@ -56,4 +58,9 @@ get("/hello", function($app) {
           User::logout();
           $app->redirect('/');
         });
-?>
+ /** PROFILE **/
+        get("/user/:username",function(Bones $app){
+          $app->set('user',User::get_by_username($app->request("username")));
+          $app->render('user/profile');
+        });
+

@@ -79,10 +79,22 @@ class User extends Base {
     }
   }
 
+  /** obtient un user par son username
+   * @param string $username
+   * @return User
+   */
   static function get_by_username($username=null){
     $bones = new Bones();
     $bones->couch->setDatabase('_users');
     $bones->couch->login(USER,PASSWORD);
+    $user = new User();
+    /** obtenir un document par id **/
+    $document=$bones->couch->get('org.couchdb.user:'.$username)->body;
+    $user->_id=$document->_id;
+    $user->name=$document->name;
+    $user->email=$document->email;
+    $user->full_name=$document->full_name;
+    return $user;
   }
 }
 
