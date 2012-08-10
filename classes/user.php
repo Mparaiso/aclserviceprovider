@@ -37,7 +37,9 @@ class User extends Base {
       return true;
     } catch (SagCouchException $e) {
       if ($e->getCode() == "409") {
-
+        $app->set('error', 'A user with this name already exists. ');
+      } else {
+        $app->error500($e);
       }
     }
   }
@@ -50,31 +52,33 @@ class User extends Base {
       session_start();
       $_SESSION["username"] = $bones->couch->getSession()->body->userCtx->name;
       session_write_close();
-      } catch (SagCouchException $e) {
+      return true;
+    } catch (SagCouchException $e) {
       if ($e->getCode() == "401") {
         $bones->set("error", "Incorrect login credentials");
-        $bones->render('user/login');
+      } else {
+        $bones->error500($e);
       }
     }
   }
 
-  static function logout(){
+  static function logout() {
     $bones = new Bones();
     $bones->couch->login(null, null);
     session_start();
     session_destroy();
   }
 
-  static  function current_user(){
+  static function current_user() {
     session_start();
     return $_SESSION['username'];
     session_write_close();
   }
 
-  static function is_authenticated(){
-    if(self::current_user()){
+  static function is_authenticated() {
+    if (self::current_user()) {
       return true;
-    }  else {
+    } else {
       return false;
     }
   }
@@ -83,18 +87,27 @@ class User extends Base {
    * @param string $username
    * @return User
    */
-  static function get_by_username($username=null){
+  static function get_by_username($username = null) {
     $bones = new Bones();
     $bones->couch->setDatabase('_users');
-    $bones->couch->login(USER,PASSWORD);
+    $bones->couch->login(USER, PASSWORD);
     $user = new User();
-    /** obtenir un document par id **/
-    $document=$bones->couch->get('org.couchdb.user:'.$username)->body;
-    $user->_id=$document->_id;
-    $user->name=$document->name;
-    $user->email=$document->email;
-    $user->full_name=$document->full_name;
-    return $user;
+    /** obtenir un document par id * */
+    try {
+      $document = $bones->couch->get('org.couchdb.user:' . $username)->body;
+      $user->_id = $document->_id;
+      $user->name = $document->name;
+      $user->email = $document->email;
+      $user->full_name = $document->full_name;
+      return $user;
+    } catch (SagCouchException $e) {
+      if ($e->getCode() == "404"):
+        $bones->error404();
+      else:
+        $bones->error500($e);
+      endif;
+    }
   }
+
 }
 

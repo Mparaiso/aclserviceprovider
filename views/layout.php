@@ -8,9 +8,9 @@
     <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-"></script>
+    "></script>
     <script type="text/javascript"
-    src=' <?=$this->make_route('/js/bootstrap.js')?> '>
+            src=' <?= $this->make_route('/js/bootstrap.js') ?> '>
     </script>
     <link href="<?= $this->make_route('/css/master.css') ?>" rel="stylesheet"/>
     <link rel="stylesheet" href="<?= $this->make_route('/css/bootstrap-responsive.min.css') ?>" />
@@ -29,17 +29,18 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="<?= $this->make_route('/') ?>">Home</a></li>
-              <? if(User::is_authenticated()): ?>
-              <li>
-                <a href="<?=$this->make_route('/logout')?>">Logout</a>
-              </li>
+              <? if (User::is_authenticated()): ?>
+                <li><a href="<?= $this->make_route("/user/" . User::current_user()) ?>">My profile</a></li>
+                <li>
+                  <a href="<?= $this->make_route('/logout') ?>">Logout</a>
+                </li>
               <? else: ?>
-              <li>
-                <a href="<?= $this->make_route('/signup') ?>">Signup</a>
-              </li>
-              <li>
-                <a href="<?= $this->make_route('/login') ?>">Login</a>
-              </li>
+                <li>
+                  <a href="<?= $this->make_route('/signup') ?>">Signup</a>
+                </li>
+                <li>
+                  <a href="<?= $this->make_route('/login') ?>">Login</a>
+                </li>
               <? endif; ?>
             </ul>
           </div>
@@ -47,10 +48,9 @@
       </div>
     </div>
     <div class="container">
-      <?=$this->display_alert('error')?>
-      <?=$this->display_alert('success')?>
+      <?= $this->display_alert('error') ?>
+      <?= $this->display_alert('success') ?>
       <? include($this->content); ?>
     </div>
-
   </body>
 </html>

@@ -37,6 +37,10 @@ function delete($route, $callback) {
     Bones::register($route, $callback, 'DELETE');
 }
 
+function resolve(){
+  Bones::resolve();
+}
+
 /** framework * */
 class Bones {
 
@@ -65,7 +69,11 @@ class Bones {
      */
     public $couch;
 
-    /** singleton * */
+    /**
+     * singleton
+     *
+     * @return Bones
+     */
     public static function get_instance() {
         if (!isset(self::$instance)):
             self::$instance = new Bones();
@@ -140,6 +148,13 @@ class Bones {
       header('Location: '.$this->make_route($path));
     }
 
+    public static function resolve(){
+      if(!static::$route_found){
+        $bones=static::get_instance();
+        $bones->error404();
+      }
+    }
+
     /**
      * enregistre une route ,
      * un callback et une méthode http dans bones
@@ -188,6 +203,17 @@ class Bones {
       if(isset($this->vars[$variable])){
         return "<div class='alert alert-$variable'><a class='close' data-dismiss='alert'>x</a>".$this->vars[$variable]."</div>";
       }
+    }
+
+    function  error500($exception){
+      $this->set("exception",$exception);
+      $this->render('error/500');
+      exit;
+    }
+
+    function error404(){
+      $this->render('error/404');
+      exit;
     }
 
 }
