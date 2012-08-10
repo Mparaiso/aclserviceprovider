@@ -50,6 +50,8 @@
     <div class="container">
       <?= $this->display_alert('error') ?>
       <?= $this->display_alert('success') ?>
+      <?= $this->displayFlashMessage("error") ?>
+      <?= $this->displayFlashMessage("success") ?>
       <? include($this->content); ?>
     </div>
   </body>

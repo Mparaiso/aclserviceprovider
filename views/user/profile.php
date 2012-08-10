@@ -28,7 +28,18 @@
           <button id="create_post" type="submit" class="btn btn-primary">Submit</button>
         </form>
       <? endif; ?>
-      <h2>Posts</h2>
+      <h2>Posts (<?=$post_count?>)</h2>
+      <? foreach ($posts as $post): ?>
+        <div class="post-item row">
+          <div class="span7">
+            <strong><?= $user->name ?></strong>
+            <p><?= $post->content ?></p>
+            <?= $post->date_created ?>
+          </div>
+          <div class="span1"><a href="#">(Delete)</a></div>
+          <div class="span8"></div>
+        </div>
+      <? endforeach ?>
     </div>
   </div>
 </div>

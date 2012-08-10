@@ -49,7 +49,6 @@ class User extends Base {
     $bones->couch->setDatabase('_users');
     try {
       $bones->couch->login($this->name, $password, Sag::$AUTH_COOKIE);
-      session_start();
       $_SESSION["username"] = $bones->couch->getSession()->body->userCtx->name;
       session_write_close();
       return true;
@@ -70,9 +69,7 @@ class User extends Base {
   }
 
   static function current_user() {
-    session_start();
     return $_SESSION['username'];
-    session_write_close();
   }
 
   static function is_authenticated() {

@@ -52,7 +52,7 @@ post('/login', function(Bones $app) {
             $app->set('success', 'You are now logged in!');
             $app->render("home");
           else:
-            $bones->render('user/login');
+            $app->render('user/login');
           endif;
         });
 
@@ -64,6 +64,8 @@ get('/logout', function(Bones $app) {
 get("/user/:username", function(Bones $app) {
           $app->set('user', User::get_by_username($app->request("username")));
           $app->set('is_current_user', ($app->request("username") == User::current_user() ? true : false));
+          $app->set("posts",Post::get_posts_by_user($app->request("username")));
+          $app->set("post_count",Post::get_post_count_by_user($app->request("username")));
           $app->render('user/profile');
         });
 post('/post', function(Bones $app) {
@@ -72,8 +74,9 @@ post('/post', function(Bones $app) {
           $post->content = $app->form('content');
           if ($post->create()):
             $app->set("success", "New post created");
+            $app->flash_messenger->set("success", "New post created");
+            $app->redirect("/user/" . User::current_user());
           endif;
-          $app->redirect("/user/" . User::current_user());
           else:
             $app->set('error',"You must be logged in to do that.");
             $app->render('user/login');
