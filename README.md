@@ -2,6 +2,8 @@
 
 #a php micro-framework inspired by Sinatra
 
+### powered by CouchDB
+
 ##HELLO BONES
 
 ```php
