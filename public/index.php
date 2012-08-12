@@ -1,100 +1,44 @@
 <?php
 
-require_once "..\lib\bones.php";
+require_once __DIR__ . '/../vendor/autoload.php';
 
-get("/", function($app) {
-          $app->set("message", "Welcome to Verge");
-          $app->render("home");
-        });
+require_once __DIR__ . "/../lib/sag/src/Sag.php";
 
-get("/signup", function($app) {
-          $app->render("user/signup");
-        });
+require_once __DIR__ . "/../lib/bootstrap.php";
 
-/** créer un user , inserer user dans la base de donnée * */
-post("/signup", function(Bones $app) {
-          $user = new User();
-          $user->full_name = $app->form('full_name');
-          $user->email = $app->form("email");
-          $signed = $user->signup($app->form("username"), $app->form("password"));
-          if ($signed == true) {
-            $app->set("success", "Thanks for Signing Up" . $user->fullname);
-            $app->render("home");
-          } else {
-            $app->set("error", "A user with this name already exists. ");
-            $app->render('user/signup');
-          }
-        });
+function __autoload($classname) {
+  include_once(__DIR__ . "/../classes/" . strtolower($classname) . ".php");
+}
 
-get("/start", function($app) {
-          return "Start";
+
+$app = new Silex\Application();
+
+/** activer twig * */
+$app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__ . '/../views'));
+
+$app["debug"] = true;
+
+#BOOTSTRAP HELPER
+$app["bootstrap"]=$app->share(function(){
+  return new Bootstrap();
+});
+
+#COUCHDB service
+$app["couch"] = $app->share(function() {
+          return new Sag();
         });
 
-get("/say/:message", function($app) {
-          $app->set('message', $app->request('message'));
-          $app->render("home");
+#HOME
+$app->get("/", function(Silex\Application $app) {
+          return $app["twig"]->render('home.twig', array('message' => "Welcome to Verge !!"));
         });
+#SIGNUP
+$app->get("/signup",function(Silex\Application $app){
+  return $app["twig"]->render("user/signup.twig");
+});
+#POST SIGN UP
+$app->post('/signup',function(Silex\Application $app){
 
-get("/hello", function($app) {
-          return "hello Bones";
-        });
+});
 
-#USERS
-# login
-get('/login', function(Bones $app) {
-          $app->render('user/login');
-        });
-
-post('/login', function(Bones $app) {
-          $user = new User();
-          $user->name = $app->form('username');
-          if ($user->login($app->form('password'))):
-            $app->set('success', 'You are now logged in!');
-            $app->render("home");
-          else:
-            $app->render('user/login');
-          endif;
-        });
-
-get('/logout', function(Bones $app) {
-          User::logout();
-          $app->redirect('/');
-        });
-#PROFILE
-get("/user/:username", function(Bones $app) {
-          $app->set('user', User::get_by_username($app->request("username")));
-          $app->set('is_current_user', ($app->request("username") == User::current_user() ? true : false));
-          $app->set("posts", Post::get_posts_by_user($app->request("username")));
-          $app->set("post_count", Post::get_post_count_by_user($app->request("username")));
-          $app->render('user/profile');
-        });
-#POST
-get('/post/delete/:id/:rev', function(Bones $app) {
-          $post = new Post();
-          $post->_id = $app->request("id");
-          $post->_rev = $app->request("rev");
-          if ($post->delete()):
-            $app->flash_messenger->set("success", "Your post has been deleted");
-          else:
-            $app->flash_messenger->set("error", "Error deleting post");
-          endif;
-          $app->redirect("/user/" . User::current_user());
-        });
-
-post('/post', function(Bones $app) {
-          if (User::is_authenticated()):
-            $post = new Post();
-            $post->content = $app->form('content');
-            if ($post->create()):
-              $app->set("success", "New post created");
-              $app->flash_messenger->set("success", "New post created");
-              $app->redirect("/user/" . User::current_user());
-            endif;
-          else:
-            $app->set('error', "You must be logged in to do that.");
-            $app->render('user/login');
-          endif;
-        });
-
-#Routes not found
-resolve();
+$app->run();

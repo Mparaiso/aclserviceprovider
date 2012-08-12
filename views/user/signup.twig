@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+{% block content %}
+<div class="page-header">
+  <h1>Signup</h1>
+</div>
+<div class="row">
+  <div class="span12">
+    <form method="post" action="/signup" class="form-vertical">
+      <fieldset>
+        {#@note @twig commentaire désactiver l'autoescape #}
+        {% autoescape false %}
+        {{app.bootstrap.make_input("full_name","Full Name")}}
+        {{app.bootstrap.make_input("email","Email")}}
+        {{app.bootstrap.make_input("username", "Username")}}
+        {{app.bootstrap.make_input("password", "Password","password")}}
+        {%endautoescape%}
+          <div class="form-actions">
+            <button class="btn-primary btn">Sign Up!</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+{% endblock %}

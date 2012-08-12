@@ -1,0 +1,8 @@
+{
+  "minimum-stability":"dev",
+  "require":{
+    "silex/silex":"*",
+    "twig/twig":"*",
+    "symfony/twig-bridge":"*"
+  }
+}
