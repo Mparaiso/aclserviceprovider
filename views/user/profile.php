@@ -39,7 +39,7 @@
               <?= $post->date_created ?>
             </div>
           </div>
-          <div class="span1"><?if($is_current_user):?><a href="#">(Delete)</a><?endif?></div>
+          <div class="span1"><?//if($is_current_user):?><a href="<?=$this->make_route("/post/delete/$post->_id/$post->_rev")?>">(Delete)</a><?//endif?></div>
           <div class="span8"></div>
         </div>
       <? endforeach ?>
