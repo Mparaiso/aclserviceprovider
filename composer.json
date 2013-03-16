@@ -1,0 +1,33 @@
+{
+  "name": "mparaiso/aclserviceprovider",
+  "description": "AclServiceProvider for Silex",
+  "keywords": [
+    "silex",
+    "extensions",
+    "acl",
+    "doctrine"
+  ],
+  "homepage": "https://github.com/Mparaiso/aclserviceprovider",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "MParaiso",
+      "email": "mparaiso@online.fr"
+    }
+  ],
+  "require-dev": {
+    "silex/silex": "*"
+  },
+  "require": {
+    "php": ">=5.3.3",
+    "doctrine/dbal": "2.3.*",
+    "symfony/security": "2.2.*",
+    "symfony/console":"2.2.*"
+  },
+  "suggest": {},
+  "autoload": {
+    "psr-0": {
+      "Mparaiso": "src/"
+    }
+  }
+}
