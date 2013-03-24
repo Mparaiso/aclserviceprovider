@@ -9,7 +9,6 @@ use Symfony\Component\Security\Acl\Voter\AclVoter;
 use Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy;
 use Symfony\Component\Security\Acl\Domain\SecurityIdentityRetrievalStrategy;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentityRetrievalStrategy;
-
 #use Symfony\Component\Security\Acl\Domain\AclCollectionCache;
 use Symfony\Component\Security\Acl\Domain\DoctrineAclCache;
 use Silex\Application;
